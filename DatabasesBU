@@ -1,0 +1,18 @@
+#! /bin/bash
+ 
+TIMESTAMP=$(date +"%Y-%b-%d")
+BACKUP_DIR="/PATH/TO/BACKUP/$TIMESTAMP"
+MYSQL_USER="USER"
+MYSQL=/usr/bin/mysql
+MYSQL_PASSWORD="PASSWORD"
+MYSQLDUMP=/usr/bin/mysqldump
+ 
+mkdir -p "$BACKUP_DIR"
+ 
+databases=`$MYSQL --user=$MYSQL_USER -p$MYSQL_PASSWORD -e "SHOW DATABASES;" | grep -Ev "(Database|information_schema|performance_schema)"`
+ 
+for db in $databases; do
+  $MYSQLDUMP  --user=$MYSQL_USER -p$MYSQL_PASSWORD $db | gzip > "$BACKUP_DIR/$db-$TIMESTAMP.sql.gz"
+done
+
+find /PATH/TO/BACKUP/* -mtime +31 -exec rm -rf {} \; 

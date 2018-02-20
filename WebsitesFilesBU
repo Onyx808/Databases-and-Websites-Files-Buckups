@@ -1,0 +1,4 @@
+#! /bin/bash
+cd /WEB/ROOT/PATH; date=$(date +"%Y-%b-%d"); mkdir /PATH/TO/BACKUP/$date; for i in */; do tar -cf "/PATH/TO/BACKUP/$date/${i%/}-$date.tar.gz" "$i"; done
+
+find /PATH/TO/BACKUP/* -mtime +31 -exec rm -rf {} \; 
